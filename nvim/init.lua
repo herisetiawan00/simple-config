@@ -2,30 +2,64 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.o.number = true
 vim.o.wrap = false
+vim.o.cmdheight = 0
 
-vim.cmd [[
-  hi Normal guibg=none
-  hi NonText guibg=none
-  hi Normal ctermbg=none
-  hi NonText ctermbg=none
-  hi StatusLine guibg=none ctermbg=none guifg=#aaaaaa ctermfg=white
-]]
+function _G.normalized_mode()
+	local modes = {
+		n = 'NORMAL',
+		i = 'INSERT',
+		v = 'VISUAL',
+		V = 'V-LINE',
+		[''] = 'V-BLOCK',
+		c = 'COMMAND',
+		R = 'REPLACE',
+		t = 'TERMINAL',
+	}
+	return modes[vim.api.nvim_get_mode().mode] or 'UNKNOWN'
+end
+
+function _G.lsp_names()
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	if #clients == 0 then
+		return ''
+	end
+	local names = {}
+	for _, client in ipairs(clients) do
+		table.insert(names, client.name)
+	end
+	return '(' .. table.concat(names, ', ') .. ')'
+end
+
+local statusline = { '[%{v:lua.normalized_mode()}]', ' %{fnamemodify(expand("%"), ":.")}', '%r', '%m', '%=',
+	'%{&filetype} ' .. '%{v:lua.lsp_names()}' }
+
+vim.o.statusline = table.concat(statusline, '')
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
 
-vim.pack.add({
-	'https://github.com/nvim-lua/plenary.nvim',
-	'https://github.com/ibhagwan/fzf-lua',
-	'https://github.com/f-person/git-blame.nvim',
-	'https://github.com/nvim-treesitter/nvim-treesitter',
-	'https://github.com/hrsh7th/cmp-nvim-lsp',
-	'https://github.com/hrsh7th/cmp-buffer',
-	'https://github.com/hrsh7th/cmp-path',
-	'https://github.com/hrsh7th/nvim-cmp',
-	'https://github.com/nvim-flutter/flutter-tools.nvim',
-})
+vim.pack.add(
+	vim.tbl_map(
+		function(url)
+			return url:match('^https://') and url or 'https://github.com/' .. url
+		end,
+		{
+			'nvim-lua/plenary.nvim',
+			'ibhagwan/fzf-lua',
+			'f-person/git-blame.nvim',
+			'hrsh7th/cmp-buffer',
+			'hrsh7th/cmp-nvim-lsp',
+			'hrsh7th/cmp-path',
+			'hrsh7th/nvim-cmp',
+			'nvim-flutter/flutter-tools.nvim',
+			'nvim-treesitter/nvim-treesitter',
+			'catppuccin/nvim',
+			'mistweaverco/kulala.nvim',
+		}
+	)
+)
 
 vim.keymap.set('x', 'Y', '"+y', { desc = 'Copy to System Clipboard' })
+vim.keymap.set('n', '<leader>B', '<cmd>let @+=expand("%:p")<cr>', { desc = 'Copy Path of Current Buffer' })
 
 vim.keymap.set('n', '<C-l>', '<cmd>vertical resize +5<cr>', { desc = 'Resize Window Bigger Vertically' })
 vim.keymap.set('n', '<C-h>', '<cmd>vertical resize -5<cr>', { desc = 'Resize Window Smaller Vertically' })
@@ -41,11 +75,11 @@ vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format' })
 
 vim.keymap.set('n', '<leader>f', '<cmd>FzfLua<cr>', { desc = 'Finder' })
 
-vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls' })
+vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls' })
 
 local cmp = require('cmp')
 cmp.setup({
-	snippet = { expand = vim.snippet.expand },
+	snippet = { expand = function(args) vim.snippet.expand(args.body) end },
 	completion = { completeopt = "menu,menuone,noinsert" },
 	preselect = cmp.PreselectMode.Item,
 	mapping = cmp.mapping.preset.insert({
@@ -60,3 +94,6 @@ cmp.setup({
 		{ { name = "buffer" } }
 	),
 })
+
+require("catppuccin").setup { transparent_background = true }
+vim.cmd.colorscheme "catppuccin"
