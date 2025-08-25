@@ -1,3 +1,6 @@
 [submodule "fonts"]
 	path = fonts
 	url = git@github.com:herisetiawan00/fonts
+[submodule "external/z"]
+	path = external/z
+	url = git@github.com:rupa/z
