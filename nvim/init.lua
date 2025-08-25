@@ -1,21 +1,21 @@
-function _G.MODE()
+function _G.S_MODE()
   return ({ n = 'N', i = 'I', v = 'V', V = 'VL', ['\026'] = 'VB', c = 'C', R = 'R', t = 'T' })
       [vim.api.nvim_get_mode().mode] or '?'
 end
 
-function _G.AGENT()
+function _G.S_AGENT()
   local enabled = vim.lsp.inline_completion.is_enabled()
-  return enabled and "[AI]" or ""
+  return enabled and "AI" or "NO-AI"
 end
 
-function _G.L()
+function _G.S_LSP()
   local n = vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
   return #n > 0 and '(' .. table.concat(n, ', ') .. ')' or ''
 end
 
 for _, p in pairs { '2html_plugin', 'tohtml', 'getscript', 'getscriptPlugin', 'gzip', 'logipat', 'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'matchit', 'tar', 'tarPlugin', 'rrhelper', 'spellfile_plugin', 'vimball', 'vimballPlugin', 'zip', 'zipPlugin', 'tutor', 'rplugin', 'syntax', 'synmenu', 'optwin', 'compiler', 'bugreport', 'ftplugin' } do vim.g['loaded_' .. p] = 1 end
 
-for k, v in pairs({ number = true, wrap = false, cmdheight = 0, tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true, ignorecase = true, smartcase = true, incsearch = true, foldmethod = 'indent', foldexpr = 'nvim_treesitter#foldexpr()', foldlevelstart = 1, statusline = '[%{v:lua.MODE()}] %f %r%m %=%{&ft} %{v:lua.L()} %{v:lua.AGENT()}', mouse = '' })
+for k, v in pairs({ number = true, wrap = false, cmdheight = 0, tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true, ignorecase = true, smartcase = true, incsearch = true, foldmethod = 'indent', foldexpr = 'nvim_treesitter#foldexpr()', foldlevelstart = 1, statusline = '[%{v:lua.S_MODE()}] %f %r%m %=%{&ft} %{v:lua.S_LSP()} [%{v:lua.S_AGENT()}]', mouse = '' })
 do vim.o[k] = v end
 
 vim.g.mapleader = ' '
@@ -74,6 +74,6 @@ for m, s in pairs({
     ['<leader>ls'] = vim.lsp.buf.references,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>lf'] = vim.lsp.buf.format,
-    ['<leader>c'] = function() vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) end,
+    ['<leader>c'] = function() vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) vim.cmd('redrawstatus') end,
   }
 }) do for k, c in pairs(s) do vim.keymap.set(m, k, c) end end
