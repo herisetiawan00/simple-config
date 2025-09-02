@@ -1,0 +1,24 @@
+sync_to_monitor yes
+remember_window_size yes
+remember_window_position yes
+window_margin_width 8
+hide_window_decorations titlebar-only
+confirm_os_window_close 0
+
+# background_image ~/Downloads/sameko-saba-peeking-out.jpeg
+# background_image_layout cscaled
+background_opacity 0.85
+background_blur 10
+
+macos_window_resizable yes
+macos_traditional_fullscreen no
+
+background_tint 0.99
+
+font_family      BerkeleyMono Nerd Font Regular
+bold_font        BerkeleyMono Nerd Font Bold
+italic_font      BerkeleyMono Nerd Font Oblique
+bold_italic_font BerkeleyMono Nerd Font Bold Oblique
+
+cursor_trail 1
+cursor_trail_decay 0.1 0.4
