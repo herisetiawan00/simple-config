@@ -21,12 +21,13 @@ do vim.o[k] = v end
 for k, v in pairs({ mapleader = ' ', maplocalleader = '\\' }) do vim.g[k] = v end
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
-vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls', 'copilot' })
+vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'css_ls', 'prisma_ls', 'ts_ls', 'rust_ls', 'kulala.ls', 'copilot' })
 vim.pack.add(vim.tbl_map(function(u) return u:match('^https://') and u or 'https://github.com/' .. u end, {
   'nvim-lua/plenary.nvim', 'ibhagwan/fzf-lua', 'f-person/git-blame.nvim', 'hrsh7th/cmp-buffer',
   'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-path', 'hrsh7th/nvim-cmp', 'nvim-flutter/flutter-tools.nvim',
   'nvim-treesitter/nvim-treesitter', 'catppuccin/nvim', 'mistweaverco/kulala.nvim',
   'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua', 'https://gitlab.com/itaranto/plantuml.nvim',
+  'nvim-tree/nvim-web-devicons'
 }))
 
 for k, v in pairs({
