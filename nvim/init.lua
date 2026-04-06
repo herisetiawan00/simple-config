@@ -17,12 +17,12 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
-vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls' })
+vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls', 'copilot' })
 vim.pack.add(vim.tbl_map(function(u) return u:match('^https://') and u or 'https://github.com/' .. u end, {
   'nvim-lua/plenary.nvim', 'ibhagwan/fzf-lua', 'f-person/git-blame.nvim', 'hrsh7th/cmp-buffer',
   'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-path', 'hrsh7th/nvim-cmp', 'nvim-flutter/flutter-tools.nvim',
   'nvim-treesitter/nvim-treesitter', 'catppuccin/nvim', 'mistweaverco/kulala.nvim',
-  'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua', 'https://gitlab.com/itaranto/plantuml.nvim',
+  'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua', 'https://gitlab.com/itaranto/plantuml.nvim', 'folke/lazy.nvim'
 }))
 
 for k, v in pairs({
@@ -49,6 +49,9 @@ for k, v in pairs({
 }) do v(require(k)) end
 
 for m, s in pairs({
+  i = {
+    ['<Tab>'] = vim.lsp.inline_completion.get,
+  },
   x = {
     Y = '"+y',
   },
@@ -66,5 +69,6 @@ for m, s in pairs({
     ['<leader>ls'] = vim.lsp.buf.references,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>lf'] = vim.lsp.buf.format,
+    ['<leader>c'] = function () vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) end,
   }
 }) do for k, c in pairs(s) do vim.keymap.set(m, k, c) end end
