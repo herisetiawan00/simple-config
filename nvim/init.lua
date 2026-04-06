@@ -3,6 +3,11 @@ function _G.MODE()
       [vim.api.nvim_get_mode().mode] or '?'
 end
 
+function _G.AGENT()
+  local enabled = vim.lsp.inline_completion.is_enabled()
+  return enabled and "[AI]" or ""
+end
+
 function _G.L()
   local n = vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
   return #n > 0 and '(' .. table.concat(n, ', ') .. ')' or ''
@@ -10,7 +15,7 @@ end
 
 for _, p in pairs { '2html_plugin', 'tohtml', 'getscript', 'getscriptPlugin', 'gzip', 'logipat', 'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'matchit', 'tar', 'tarPlugin', 'rrhelper', 'spellfile_plugin', 'vimball', 'vimballPlugin', 'zip', 'zipPlugin', 'tutor', 'rplugin', 'syntax', 'synmenu', 'optwin', 'compiler', 'bugreport', 'ftplugin' } do vim.g['loaded_' .. p] = 1 end
 
-for k, v in pairs({ number = true, wrap = false, cmdheight = 0, tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true, ignorecase = true, smartcase = true, incsearch = true, foldmethod = 'indent', foldexpr = 'nvim_treesitter#foldexpr()', foldlevelstart = 1, statusline = '[%{v:lua.MODE()}] %f %r%m %=%{&ft} %{v:lua.L()}', mouse = '' })
+for k, v in pairs({ number = true, wrap = false, cmdheight = 0, tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true, ignorecase = true, smartcase = true, incsearch = true, foldmethod = 'indent', foldexpr = 'nvim_treesitter#foldexpr()', foldlevelstart = 1, statusline = '[%{v:lua.MODE()}] %f %r%m %=%{&ft} %{v:lua.L()} %{v:lua.AGENT()}', mouse = '' })
 do vim.o[k] = v end
 
 vim.g.mapleader = ' '
@@ -22,7 +27,7 @@ vim.pack.add(vim.tbl_map(function(u) return u:match('^https://') and u or 'https
   'nvim-lua/plenary.nvim', 'ibhagwan/fzf-lua', 'f-person/git-blame.nvim', 'hrsh7th/cmp-buffer',
   'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-path', 'hrsh7th/nvim-cmp', 'nvim-flutter/flutter-tools.nvim',
   'nvim-treesitter/nvim-treesitter', 'catppuccin/nvim', 'mistweaverco/kulala.nvim',
-  'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua', 'https://gitlab.com/itaranto/plantuml.nvim', 'folke/lazy.nvim'
+  'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua', 'https://gitlab.com/itaranto/plantuml.nvim',
 }))
 
 for k, v in pairs({
@@ -69,6 +74,6 @@ for m, s in pairs({
     ['<leader>ls'] = vim.lsp.buf.references,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>lf'] = vim.lsp.buf.format,
-    ['<leader>c'] = function () vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) end,
+    ['<leader>c'] = function() vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) end,
   }
 }) do for k, c in pairs(s) do vim.keymap.set(m, k, c) end end
