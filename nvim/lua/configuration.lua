@@ -51,12 +51,10 @@ local configuration = {
   },
   diagnostic = { virtual_lines = { current_line = true } },
   lsp = {
-    'copilot',
     'css_ls',
     'dart_ls',
     'eslint_ls',
     'kotlin_ls',
-    'kulala.ls',
     'lua_ls',
     'prisma_ls',
     'rust_ls',
@@ -71,21 +69,15 @@ local configuration = {
     'hrsh7th/cmp-path',
     'hrsh7th/nvim-cmp',
     'ibhagwan/fzf-lua',
-    'kungfusheep/mfd.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
     'nvim-treesitter/nvim-treesitter',
-    -- 'MeanderingProgrammer/render-markdown.nvim',
-    -- 'https://gitlab.com/itaranto/plantuml.nvim',
-    -- 'mistweaverco/kulala.nvim',
-    -- 'nvim-flutter/flutter-tools.nvim',
   },
   plugins_setup = {
     cmp = function(cmp)
       cmp.setup({
         snippet = { expand = function(a) vim.snippet.expand(a.body) end },
-        completion = { completeopt = 'menu,menuone,noinsert' },
         preselect = cmp.PreselectMode.Item,
         mapping = cmp.mapping.preset.insert({
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
@@ -96,19 +88,12 @@ local configuration = {
         sources = cmp.config.sources({ { name = 'nvim_lsp' }, { name = 'path' } }, { { name = 'buffer' } })
       })
     end,
-    mfd = function (mfd)
-      mfd.setup()
-    end,
     catppuccin = function(catppuccin)
       catppuccin.setup({ transparent_background = true, integrations = { fzf = true, } })
     end,
     ['nvim-tree'] = function(tree) tree.setup({ update_focused_file = { enable = true } }) end,
-    -- plantuml = function(plantuml) plantuml.setup() end
   },
   keymaps = {
-    i = {
-      ['<S-Tab>'] = vim.lsp.inline_completion.get,
-    },
     x = {
       Y = '"+y',
     },
@@ -126,10 +111,6 @@ local configuration = {
       ['<leader>ls'] = vim.lsp.buf.references,
       ['<leader>lr'] = vim.lsp.buf.rename,
       ['<leader>lf'] = vim.lsp.buf.format,
-      ['<leader>c'] = function()
-        vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled())
-        vim.cmd('redrawstatus')
-      end,
     }
   },
   colorscheme = 'catppuccin',

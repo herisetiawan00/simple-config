@@ -21,3 +21,4 @@ function _G.S_LSP()
   local n = vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
   return #n > 0 and '(' .. table.concat(n, ', ') .. ')' or ''
 end
+
