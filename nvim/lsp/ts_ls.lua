@@ -1,5 +1,5 @@
 return {
-	cmd = { 'typescript-language-server', '--stdio' },
+	cmd = { 'vtsls', '--stdio' },
 	filetypes = {
 		'javascript',
 		'javascriptreact',

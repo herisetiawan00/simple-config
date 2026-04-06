@@ -1,99 +1,83 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-vim.o.number = true
-vim.o.wrap = false
-vim.o.cmdheight = 0
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
 
-function _G.normalized_mode()
-	local modes = {
-		n = 'NORMAL',
-		i = 'INSERT',
-		v = 'VISUAL',
-		V = 'V-LINE',
-		[''] = 'V-BLOCK',
-		c = 'COMMAND',
-		R = 'REPLACE',
-		t = 'TERMINAL',
-	}
-	return modes[vim.api.nvim_get_mode().mode] or 'UNKNOWN'
+for k, v in pairs({
+  number = true,
+  wrap = false,
+  cmdheight = 0,
+  tabstop = 2,
+  shiftwidth = 2,
+  softtabstop = 2,
+  expandtab = true,
+  foldmethod = 'indent',
+  foldexpr = 'nvim_treesitter#foldexpr()',
+  foldlevelstart = 1,
+  statusline = '[%{v:lua.M()}] %f %r%m %=%{&ft} %{v:lua.L()}',
+  mouse = '',
+}) do vim.o[k] = v end
+
+function _G.M()
+  return ({ n = 'N', i = 'I', v = 'V', V = 'VL', ['\026'] = 'VB', c = 'C', R = 'R', t = 'T' })
+      [vim.api.nvim_get_mode().mode] or '?'
 end
 
-function _G.lsp_names()
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	if #clients == 0 then
-		return ''
-	end
-	local names = {}
-	for _, client in ipairs(clients) do
-		table.insert(names, client.name)
-	end
-	return '(' .. table.concat(names, ', ') .. ')'
+function _G.L()
+  local n = vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
+  return #n > 0 and '(' .. table.concat(n, ', ') .. ')' or ''
 end
-
-local statusline = { '[%{v:lua.normalized_mode()}]', ' %{fnamemodify(expand("%"), ":.")}', '%r', '%m', '%=',
-	'%{&filetype} ' .. '%{v:lua.lsp_names()}' }
-
-vim.o.statusline = table.concat(statusline, '')
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
 
-vim.pack.add(
-	vim.tbl_map(
-		function(url)
-			return url:match('^https://') and url or 'https://github.com/' .. url
-		end,
-		{
-			'nvim-lua/plenary.nvim',
-			'ibhagwan/fzf-lua',
-			'f-person/git-blame.nvim',
-			'hrsh7th/cmp-buffer',
-			'hrsh7th/cmp-nvim-lsp',
-			'hrsh7th/cmp-path',
-			'hrsh7th/nvim-cmp',
-			'nvim-flutter/flutter-tools.nvim',
-			'nvim-treesitter/nvim-treesitter',
-			'catppuccin/nvim',
-			'mistweaverco/kulala.nvim',
-		}
-	)
-)
-
-vim.keymap.set('x', 'Y', '"+y', { desc = 'Copy to System Clipboard' })
-vim.keymap.set('n', '<leader>B', '<cmd>let @+=expand("%:p")<cr>', { desc = 'Copy Path of Current Buffer' })
-
-vim.keymap.set('n', '<C-l>', '<cmd>vertical resize +5<cr>', { desc = 'Resize Window Bigger Vertically' })
-vim.keymap.set('n', '<C-h>', '<cmd>vertical resize -5<cr>', { desc = 'Resize Window Smaller Vertically' })
-vim.keymap.set('n', '<C-k>', '<cmd>horizontal resize +5<cr>', { desc = 'Resize Window Bigger Horizontally' })
-vim.keymap.set('n', '<C-j>', '<cmd>horizontal resize -5<cr>', { desc = 'Resize Window Bigger Horizontally' })
-
-vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, { desc = 'Code Action' })
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.definition, { desc = 'Definition' })
-vim.keymap.set('n', '<leader>lc', vim.lsp.buf.declaration, { desc = 'Declaration' })
-vim.keymap.set('n', '<leader>ls', vim.lsp.buf.references, { desc = 'References' })
-vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename, { desc = 'Rename' })
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format' })
-
-vim.keymap.set('n', '<leader>f', '<cmd>FzfLua<cr>', { desc = 'Finder' })
+vim.pack.add(vim.tbl_map(function(u) return u:match('^https://') and u or 'https://github.com/' .. u end,
+  { 'nvim-lua/plenary.nvim', 'ibhagwan/fzf-lua', 'f-person/git-blame.nvim', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-path', 'hrsh7th/nvim-cmp', 'nvim-flutter/flutter-tools.nvim', 'nvim-treesitter/nvim-treesitter',
+    'catppuccin/nvim', 'mistweaverco/kulala.nvim', 'MeanderingProgrammer/render-markdown.nvim', 'nvim-tree/nvim-tree.lua' }))
 
 vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls' })
 
-local cmp = require('cmp')
-cmp.setup({
-	snippet = { expand = function(args) vim.snippet.expand(args.body) end },
-	completion = { completeopt = "menu,menuone,noinsert" },
-	preselect = cmp.PreselectMode.Item,
-	mapping = cmp.mapping.preset.insert({
-		['<C-u>'] = cmp.mapping.scroll_docs(-4),
-		['<C-d>'] = cmp.mapping.scroll_docs(4),
-		['<C-Space>'] = cmp.mapping.complete(),
-		['<C-e>'] = cmp.mapping.abort(),
-		['<CR>'] = cmp.mapping.confirm({ select = true }),
-	}),
-	sources = cmp.config.sources(
-		{ { name = "nvim_lsp" }, { name = "path" } },
-		{ { name = "buffer" } }
-	),
-})
+local setup = {
+  cmp = function(cmp)
+    cmp.setup({
+      snippet = { expand = function(a) vim.snippet.expand(a.body) end },
+      completion = { completeopt = 'menu,menuone,noinsert' },
+      preselect = cmp.PreselectMode.Item,
+      mapping = cmp.mapping.preset.insert({
+        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<cr>'] = cmp.mapping.confirm({ select = true }),
+      }),
+      sources = cmp.config.sources({ { name = 'nvim_lsp' }, { name = 'path' } }, { { name = 'buffer' } })
+    })
+  end,
+  catppuccin = function(catppuccin)
+    catppuccin.setup { transparent_background = true }
+    vim.cmd.colorscheme 'catppuccin'
+  end,
+  ['nvim-tree'] = function(tree) tree.setup({ update_focused_file = { enable = true } }) end
+}
 
-require("catppuccin").setup { transparent_background = true }
-vim.cmd.colorscheme "catppuccin"
+for k, v in pairs(setup) do v(require(k)) end
+
+local keymaps = {
+  x = {
+    Y = '"+y',
+    ['<leader>B'] = '<cmd>let @+=expand(\'%:p\')<cr>',
+  },
+  n = {
+    ['<C-l>'] = '<cmd>vertical resize +5<cr>',
+    ['<C-h>'] = '<cmd>vertical resize -5<cr>',
+    ['<C-k>'] = '<cmd>horizontal resize +5<cr>',
+    ['<C-j>'] = '<cmd>horizontal resize -5<cr>',
+    ['<C-e>'] = '<cmd>NvimTreeToggle<cr>',
+    ['<leader>f'] = '<cmd>FzfLua<cr>',
+    ['<leader>la'] = vim.lsp.buf.code_action,
+    ['<leader>ld'] = vim.lsp.buf.definition,
+    ['<leader>lc'] = vim.lsp.buf.declaration,
+    ['<leader>ls'] = vim.lsp.buf.references,
+    ['<leader>lr'] = vim.lsp.buf.rename,
+    ['<leader>lf'] = vim.lsp.buf.format,
+  }
+}
+
+for m, s in pairs(keymaps) do for k, c in pairs(s) do vim.keymap.set(m, k, c) end end

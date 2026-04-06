@@ -1,7 +1,7 @@
 return {
 	filetypes = { 'kotlin' },
-	cmd = { 'kotlin-language-server' },
-	-- cmd = { 'kotlin-lsp', '--stdio' },
+	-- cmd = { 'kotlin-language-server' },
+	cmd = { 'kotlin-lsp', '--stdio' },
 	root_markers = {
 		'settings.gradle', -- Gradle (multi-project)
 		'settings.gradle.kts', -- Gradle (multi-project)
