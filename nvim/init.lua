@@ -18,8 +18,7 @@ for _, p in pairs { '2html_plugin', 'tohtml', 'getscript', 'getscriptPlugin', 'g
 for k, v in pairs({ number = true, wrap = false, cmdheight = 0, tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true, ignorecase = true, smartcase = true, incsearch = true, foldmethod = 'indent', foldexpr = 'nvim_treesitter#foldexpr()', foldlevelstart = 1, statusline = '[%{v:lua.S_MODE()}] %f %r%m %=%{&ft} %{v:lua.S_LSP()} [%{v:lua.S_AGENT()}]', mouse = '' })
 do vim.o[k] = v end
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+for k, v in pairs({ mapleader = ' ', maplocalleader = '\\' }) do vim.g[k] = v end
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
 vim.lsp.enable({ 'eslint_ls', 'kotlin_ls', 'lua_ls', 'tailwindcss_ls', 'ts_ls', 'rust_ls', 'kulala.ls', 'copilot' })
@@ -55,7 +54,7 @@ for k, v in pairs({
 
 for m, s in pairs({
   i = {
-    ['<Tab>'] = vim.lsp.inline_completion.get,
+    ['<S-Tab>'] = vim.lsp.inline_completion.get,
   },
   x = {
     Y = '"+y',
@@ -74,6 +73,9 @@ for m, s in pairs({
     ['<leader>ls'] = vim.lsp.buf.references,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>lf'] = vim.lsp.buf.format,
-    ['<leader>c'] = function() vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled()) vim.cmd('redrawstatus') end,
+    ['<leader>c'] = function()
+      vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled())
+      vim.cmd('redrawstatus')
+    end,
   }
 }) do for k, c in pairs(s) do vim.keymap.set(m, k, c) end end
