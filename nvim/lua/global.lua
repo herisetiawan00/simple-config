@@ -22,3 +22,7 @@ function _G.S_LSP()
   return #n > 0 and '(' .. table.concat(n, ', ') .. ')' or ''
 end
 
+_G.LSP_PROGRESS = ""
+function _G.GET_LSP_PROGRESS()
+  return _G.LSP_PROGRESS
+end

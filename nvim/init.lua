@@ -13,15 +13,8 @@ vim.cmd.colorscheme(cfg.colorscheme)
 
 vim.api.nvim_create_autocmd("LspProgress", {
   callback = function(ev)
-    local value = ev.data.params.value
-    local percentage = value.percentage;
-
-    if percentage then
-      vim.o.statusline = '[%{v:lua.S_MODE()}] %f %r%m %=%{&ft} (' ..
-          string.format("%d%%%%", percentage) .. ') %{v:lua.S_LSP()} [%{v:lua.S_AGENT()}]';
-    else
-      vim.o.statusline = cfg.options.statusline;
-    end
+    local p = ev.data.params.value.percentage
+    _G.LSP_PROGRESS = p and string.format("(%d%%) ", p) or ""
     vim.cmd('redrawstatus')
   end,
 })

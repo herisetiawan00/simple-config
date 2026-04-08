@@ -42,7 +42,7 @@ local configuration = {
     foldmethod = 'indent',
     foldexpr = 'nvim_treesitter#foldexpr()',
     foldlevelstart = 1,
-    statusline = '[%{v:lua.S_MODE()}] %f %r%m %=%{&ft} %{v:lua.S_LSP()} [%{v:lua.S_AGENT()}]',
+    statusline = '[%{v:lua.S_MODE()}] %f %r%m %=%{&ft} %{v:lua.GET_LSP_PROGRESS()}%{v:lua.S_LSP()} [%{v:lua.S_AGENT()}]',
     mouse = ''
   },
   global = {
@@ -72,7 +72,6 @@ local configuration = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
-    'nvim-treesitter/nvim-treesitter',
   },
   plugins_setup = {
     cmp = function(cmp)

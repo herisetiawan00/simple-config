@@ -13,19 +13,15 @@
       "src": "https://github.com/hrsh7th/cmp-path"
     },
     "fzf-lua": {
-      "rev": "bde73a6886b607246095aa59f396de5e0d036890",
+      "rev": "9f0432fdd7825ab163520045831a40b6df82ea28",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "git-blame.nvim": {
       "rev": "5c536e2d4134d064aa3f41575280bc8a2a0e03d7",
       "src": "https://github.com/f-person/git-blame.nvim"
     },
-    "mfd.nvim": {
-      "rev": "a33f2140d8c4b89e5126579663d2b73dad6b6c29",
-      "src": "https://github.com/kungfusheep/mfd.nvim"
-    },
     "nvim": {
-      "rev": "a7788416689dbefea659d9e9415c87926b0ba5d8",
+      "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-cmp": {
@@ -33,15 +29,11 @@
       "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-tree.lua": {
-      "rev": "b548cfef00a79f0b3e3af24f91ae6bd14f22af95",
+      "rev": "509962f21ab7289d8dcd28568af539be39a8c01e",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
-    "nvim-treesitter": {
-      "rev": "7caec274fd19c12b55902a5b795100d21531391f",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
-    },
     "nvim-web-devicons": {
-      "rev": "d7462543c9e366c0d196c7f67a945eaaf5d99414",
+      "rev": "95b7a002d5dba1a42eb58f5fac5c565a485eefd0",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
