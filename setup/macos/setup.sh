@@ -107,6 +107,8 @@ CONFIG=(
   tmux
 )
 
+mkdir -p $HOME/.config
+
 for config in "${CONFIG[@]}"; do
   ln -sf "$HOME/.simple/$config" "$HOME/.config/$config";
 done
